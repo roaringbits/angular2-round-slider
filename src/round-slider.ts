@@ -13,6 +13,7 @@ let d3: any;
     </div>`
 })
 export class RoundSliderComponent implements OnInit {
+
   @Input()
   width: number = 120;
 
@@ -63,10 +64,14 @@ export class RoundSliderComponent implements OnInit {
   @Output()
   onChangeEnd: Subject<any>;
 
+  @Output()
+  onChange: Subject<any>;
+
   constructor(private element: ElementRef) {
     this.localAngleValue = 0;
     this._value = this.radiansToValue(Math.PI);
     this.onChangeEnd = new Subject();
+    this.onChange    = new Subject();
   }
 
   ngOnInit() {
@@ -170,9 +175,11 @@ export class RoundSliderComponent implements OnInit {
     const xpos = this.radius * Math.cos(this.localAngleValue);
     const ypos = this.radius * Math.sin(this.localAngleValue);
 
-    console.log('x', xpos);
-    console.log('y', ypos);
-    console.log('angle', this.localAngleValue);
+    //console.log('x', xpos);
+    //console.log('y', ypos);
+    //console.log('angle', this.localAngleValue);
+    this.onChange.next(this.localAngleValue);
+
 
     if (this.thumb) {
       this.thumb
@@ -214,8 +221,8 @@ export class RoundSliderComponent implements OnInit {
     if (radiansValue > Math.PI) {
       radiansValue = -(2 * Math.PI) + radiansValue;
     }
-
     return radiansValue;
+
   }
 
   private dragEnded(instance: any) {
